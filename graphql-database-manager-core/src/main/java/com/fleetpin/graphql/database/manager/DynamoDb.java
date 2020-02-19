@@ -18,26 +18,30 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface DynamoDb {
-    <T extends Table> CompletableFuture<T> delete(String organisationId, T entity);
+public abstract class DynamoDb {
+	public abstract <T extends Table> CompletableFuture<T> delete(String organisationId, T entity);
 
-    <T extends Table> CompletableFuture<T> deleteLinks(String organisationId, T entity);
+	public abstract  <T extends Table> CompletableFuture<T> deleteLinks(String organisationId, T entity);
 
-    <T extends Table> CompletableFuture<T> put(String organisationId, T entity);
+	public abstract <T extends Table> CompletableFuture<T> put(String organisationId, T entity);
 
-    CompletableFuture<List<DynamoItem>> get(List<DatabaseKey> keys);
+	public abstract CompletableFuture<List<DynamoItem>> get(List<DatabaseKey> keys);
 
-    CompletableFuture<List<DynamoItem>> getViaLinks(String organisationId, Table entry, Class<? extends Table> type, DataLoader<DatabaseKey, DynamoItem> items);
+	public abstract CompletableFuture<List<DynamoItem>> getViaLinks(String organisationId, Table entry, Class<? extends Table> type, DataLoader<DatabaseKey, DynamoItem> items);
 
-    CompletableFuture<List<DynamoItem>> query(DatabaseQueryKey key);
+	public abstract CompletableFuture<List<DynamoItem>> query(DatabaseQueryKey key);
 
-    CompletableFuture<List<DynamoItem>> queryGlobal(Class<? extends Table> type, String value);
+	public abstract CompletableFuture<List<DynamoItem>> queryGlobal(Class<? extends Table> type, String value);
 
-    CompletableFuture<List<DynamoItem>> querySecondary(Class<? extends Table> type, String organisationId, String value);
+	public abstract CompletableFuture<List<DynamoItem>> querySecondary(Class<? extends Table> type, String organisationId, String value);
 
-    <T extends Table> CompletableFuture<T> link(String organisationId, T entry, Class<? extends Table> class1, List<String> groupIds);
+	public abstract <T extends Table> CompletableFuture<T> link(String organisationId, T entry, Class<? extends Table> class1, List<String> groupIds);
 
-    int maxBatchSize();
+    protected int maxBatchSize();
 
-    String newId();
+    public abstract String newId();
+    
+    protected String getSourceTable(Table table) {
+		return table.getSourceTable();
+	}
 }

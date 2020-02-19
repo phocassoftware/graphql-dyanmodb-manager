@@ -22,7 +22,7 @@ import com.fleetpin.graphql.builder.annotations.Id;
 import com.google.common.collect.HashMultimap;
 
 public abstract class Table {
-
+//need to mvoe to be same package as poorly named dyanmodb class
 	private String id;
 	private Instant createdAt;
 	private Instant updatedAt;

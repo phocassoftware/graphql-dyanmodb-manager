@@ -72,7 +72,7 @@ public final class DynamoDbImpl implements DynamoDb {
 		}
 		
 		
-		String sourceTable = entity.getSourceTable();
+		String sourceTable = getSourceTable(entity);
 		if(sourceTable.equals(entityTable)) {
 			
 			Map<String, AttributeValue> key = new HashMap<>();
