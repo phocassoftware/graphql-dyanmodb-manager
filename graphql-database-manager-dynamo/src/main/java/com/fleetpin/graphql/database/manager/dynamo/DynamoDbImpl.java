@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import static com.fleetpin.graphql.database.manager.util.DynamoDbUtil.table;
 
-public final class DynamoDbImpl extends AbstractDynamoDb {
+public final class DynamoDbImpl extends DatabaseDriver {
 	private final AttributeValue GLOBAL = AttributeValue.builder().s("global").build();
 
 	private final List<String> entityTables; //is in reverse order so easy to over ride as we go through

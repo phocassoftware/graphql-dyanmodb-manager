@@ -10,7 +10,7 @@
  * the License.
  */
 
-package com.fleetpin.graphql.database.manager;
+package com.fleetpin.graphql.database.manager.dynamo;
 
 import java.util.ArrayList;
 import java.util.Collections;

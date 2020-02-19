@@ -12,43 +12,38 @@
 
 package com.fleetpin.graphql.database.manager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.HashMultimap;
-import org.dataloader.DataLoader;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractDynamoDb {
+import org.dataloader.DataLoader;
+
+import com.google.common.collect.HashMultimap;
+
+public abstract class DatabaseDriver {
     public abstract <T extends Table> CompletableFuture<T> delete(String organisationId, T entity);
 
     public abstract <T extends Table> CompletableFuture<T> deleteLinks(String organisationId, T entity);
 
     public abstract <T extends Table> CompletableFuture<T> put(String organisationId, T entity);
 
-    public abstract CompletableFuture<List<DynamoItem>> get(List<DatabaseKey> keys);
+    public abstract <T extends Table> CompletableFuture<List<T>> get(List<DatabaseKey<T>> keys);
 
-    public abstract CompletableFuture<List<DynamoItem>> getViaLinks(String organisationId, Table entry, Class<? extends Table> type, DataLoader<DatabaseKey, DynamoItem> items);
+    //not ment to be visible allows implementor to use dataloader to reduce queries
+    abstract <T extends Table> CompletableFuture<List<T>> getViaLinks(String organisationId, Table entry, Class<T> type, DataLoader<DatabaseKey<Table>, Table> items);
 
-    public abstract CompletableFuture<List<DynamoItem>> query(DatabaseQueryKey key);
+    public abstract <T extends Table> CompletableFuture<List<T>> query(DatabaseQueryKey<T> key);
 
-    public abstract CompletableFuture<List<DynamoItem>> queryGlobal(Class<? extends Table> type, String value);
+    public abstract <T extends Table> CompletableFuture<List<String>> queryGlobalId(Class<T> type, String value);
 
-    public abstract CompletableFuture<List<DynamoItem>> querySecondary(Class<? extends Table> type, String organisationId, String value);
+    public abstract <T extends Table> CompletableFuture<List<String>> querySecondaryId(Class<T> type, String organisationId, String value);
 
     public abstract <T extends Table> CompletableFuture<T> link(String organisationId, T entry, Class<? extends Table> class1, List<String> groupIds);
 
     public abstract int maxBatchSize();
 
     public abstract String newId();
-
-    protected Map<String, AttributeValue> getItem(final DynamoItem item) {
-        return item.getItem();
-    }
 
     protected <T extends Table> String getSourceOrganistaionId(final T entity) {
         return entity.getSourceOrganistaionId();
@@ -83,10 +78,6 @@ public abstract class AbstractDynamoDb {
         return entity.getSourceTable();
     }
 
-    protected <T extends Table> AttributeValue toAttributes(final ObjectMapper mapper, final T entity) {
-        return TableUtil.toAttributes(mapper, entity);
-    }
-
     protected <T extends Table> String getSecondaryGlobal(final T entity) {
         return TableUtil.getSecondaryGlobal(entity);
     }
@@ -99,11 +90,5 @@ public abstract class AbstractDynamoDb {
         return new DatabaseKey(organisationId, type, id);
     }
 
-    protected DynamoItem createDynamoItem(final String table, final Map<String, AttributeValue> item) {
-        return new DynamoItem(table, item);
-    }
-
-    protected Flatterner createFlatterner() {
-        return new Flatterner();
-    }
+    
 }

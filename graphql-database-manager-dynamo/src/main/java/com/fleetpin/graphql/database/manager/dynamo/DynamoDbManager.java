@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.fleetpin.graphql.database.manager.AbstractDynamoDb;
+import com.fleetpin.graphql.database.manager.DatabaseDriver;
 import com.fleetpin.graphql.database.manager.AbstractDynamoDbManager;
 import com.fleetpin.graphql.database.manager.Table;
 import com.fleetpin.graphql.database.manager.access.ModificationPermission;
@@ -35,10 +35,10 @@ import java.util.function.Supplier;
 public final class DynamoDbManager extends AbstractDynamoDbManager {
 	private final ObjectMapper mapper;
 	private final Supplier<String> idGenerator;
-	private final AbstractDynamoDb dynamoDb;
+	private final DatabaseDriver dynamoDb;
 	private final DynamoDbAsyncClient client;
 	
-	private DynamoDbManager(ObjectMapper mapper, Supplier<String> idGenerator, DynamoDbAsyncClient client, AbstractDynamoDb dynamoDb) {
+	private DynamoDbManager(ObjectMapper mapper, Supplier<String> idGenerator, DynamoDbAsyncClient client, DatabaseDriver dynamoDb) {
 		super();
 		this.mapper = mapper;
 		this.idGenerator = idGenerator;
@@ -65,7 +65,7 @@ public final class DynamoDbManager extends AbstractDynamoDbManager {
 		private ObjectMapper mapper;
 		private List<String> tables;
 		private Supplier<String> idGenerator;
-		private AbstractDynamoDb database;
+		private DatabaseDriver database;
 		
 		
 		public DyanmoDbManagerBuilder dynamoDbAsyncClient(DynamoDbAsyncClient client) {
@@ -95,7 +95,7 @@ public final class DynamoDbManager extends AbstractDynamoDbManager {
 			return this;
 		}
 
-		public DyanmoDbManagerBuilder dynamoDb(final AbstractDynamoDb database) {
+		public DyanmoDbManagerBuilder dynamoDb(final DatabaseDriver database) {
 			this.database = database;
 			return this;
 		}
